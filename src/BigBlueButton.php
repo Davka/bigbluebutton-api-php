@@ -59,7 +59,7 @@ class BigBlueButton
     protected $bbbServerBaseUrl;
     protected $urlBuilder;
     protected $jSessionId;
-    protected $curlOptions = []
+    protected $curlOptions = [];
 
     public function __construct($securitySecret, $bbbServerBaseUrl)
     {
