@@ -59,6 +59,7 @@ class BigBlueButton
     protected $bbbServerBaseUrl;
     protected $urlBuilder;
     protected $jSessionId;
+    protected $curlOptions = []
 
     public function __construct($securitySecret, $bbbServerBaseUrl)
     {
@@ -66,6 +67,17 @@ class BigBlueButton
         $this->securitySecret   = $securitySecret;
         $this->bbbServerBaseUrl = $bbbServerBaseUrl;
         $this->urlBuilder       = new UrlBuilder($this->securitySecret, $this->bbbServerBaseUrl);
+    }
+
+    /**
+     * @param $curlOption
+     * @param $value
+     * @return $this
+     */
+    public function setCurlOptions($curlOption, $value)
+    {
+        $this->curlOptions[$curlOption] = $value;
+        return $this;
     }
 
     /**
@@ -465,6 +477,11 @@ class BigBlueButton
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
             curl_setopt($ch, CURLOPT_COOKIEFILE, $cookiefilepath);
             curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefilepath);
+            if (!empty($this->curlOptions)) {
+                foreach ($this->curlOptions as $option => $value) {
+                    curl_setopt($ch, constant($option), $value);
+                }
+            }
             if (!empty($payload)) {
                 curl_setopt($ch, CURLOPT_HEADER, 0);
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
